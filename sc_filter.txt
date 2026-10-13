@@ -1,0 +1,31 @@
+! Title: My Custom Cross-Compatible Filter List
+! Description: Houses standard filters for uBO Lite and advanced fallbacks for full uBO.
+
+! -------------------------------------------------------------
+! SECTION 1: GLOBAL RULES (Works on both uBO and uBO Lite)
+! -------------------------------------------------------------
+! Block a common tracking script globally
+||example-tracker.com^$script,third-party
+
+! Simple cosmetic element hiding (supported by both)
+example.com##.sponsored-ad-banner
+example.com##div[id^="ad-wrapper-"]
+
+! -------------------------------------------------------------
+! SECTION 2: uBLOCK ORIGIN LITE SPECIFIC RULES
+! -------------------------------------------------------------
+!#if ext_ubol
+! Since uBOL can't use advanced scriptlets, we rely on broad network blocks or basic hiding rules here
+||annoyingpopups.com^$main_frame
+example-news.com##.premium-paywall-overlay
+!#endif
+
+! -------------------------------------------------------------
+! SECTION 3: CLASSIC uBLOCK ORIGIN ONLY RULES
+! -------------------------------------------------------------
+!#if ext_ublock
+! Advanced uBO features: Scriptlet injections and procedural filters (Ignored by uBO Lite)
+example-news.com##+js(set, paywall_bypass, true)
+shopping-site.com##.product-card:has(.promoted-badge-text)
+video-platform.com##+js(nowebrtc)
+!#endif
